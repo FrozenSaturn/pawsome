@@ -1,73 +1,82 @@
-# Welcome to your Lovable project
+# Pawsome Dumdum Connect
 
-## Project info
+Pawsome Dumdum Connect is a hyper-local community platform focused on pet welfare, resources, adoption, and community engagement for the **North Dumdum area in West Bengal, India.** It aims to connect pet lovers, volunteers, and those looking to adopt, fostering a strong local pet-friendly ecosystem.
 
-**URL**: https://lovable.dev/projects/3abb1098-bc2f-4ae5-8aa7-48fa46558e4e
+## Key Features
 
-## How can I edit this code?
+* **Homepage:** Dynamic overview with local action snippets, "How to Help," an interactive "Pet Pulse Map" (Leaflet), and featured local impact stories.
+* **North Dumdum Network:** The core community hub featuring:
+    * **Local Groups:** Discover and (mock) create local pet-related groups.
+    * **Resource Map:** Interactive Leaflet map for community-sourced local pet resources.
+    * **Action Board:** For immediate local needs and assistance.
+    * **Knowledge Base:** Community-driven pet care information relevant to North Dumdum.
+* **Adopt Page:** View and filter adoptable pets, with a form to (mock) list new pets.
+* **Volunteer Page:** Information on volunteering and an interest form.
+* **Stories Page:** Display and (mock) submit local impact stories.
+* **PawBuddy AI Chatbot:** Integrated with Google Gemini API for helpful, AI-powered assistance.
+* **Mock Backend:** Serves data and handles form submissions for a dynamic prototype experience.
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+* **Frontend:** Vite, React, TypeScript, Tailwind CSS, Shadcn UI, React Router DOM, TanStack Query (React Query), Leaflet, React-Leaflet.
+* **Backend (Mock/Development):** Node.js, Express.js.
+* **AI Chatbot:** Google Gemini API.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3abb1098-bc2f-4ae5-8aa7-48fa46558e4e) and start prompting.
+## Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+* Node.js (v18.x or later recommended)
+* npm or yarn
 
-**Use your preferred IDE**
+## Setup & Running
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1.  **Clone the repository (Conceptual):**
+    ```bash
+    # git clone [your-repo-url]
+    # cd pawsome-dumdum-connect
+    ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2.  **Frontend (`pet-friendly-city-nd` directory from previous structure):**
+    ```bash
+    cd [frontend-directory-name] # e.g., pet-friendly-city-nd
+    npm install
+    npm run dev
+    ```
+    The frontend will typically run on `http://localhost:5173`.
 
-Follow these steps:
+3.  **Backend (`pet-friendly-city-nd-backend` directory from previous structure):**
+    * Create a `.env` file in the backend directory.
+    * Add your Google Gemini API key to the `.env` file:
+        ```env
+        GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
+        ```
+    * Install dependencies and run:
+        ```bash
+        cd [backend-directory-name] # e.g., pet-friendly-city-nd-backend
+        npm install
+        node server.js
+        ```
+    The backend will typically run on `http://localhost:3001`.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Available Scripts (Frontend)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+* `npm run dev`: Starts the development server.
+* `npm run build`: Builds the app for production.
+* `npm run lint`: Lints the codebase.
+* `npm run preview`: Serves the production build locally.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Mock API Endpoints (Backend - http://localhost:3001)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+* `GET /api/action-snippets`
+* `GET /api/impact-stories`
+* `POST /api/impact-stories`
+* `GET /api/local-groups`
+* `POST /api/local-groups`
+* `GET /api/adoptable-pets`
+* `POST /api/adoptable-pets`
+* `POST /api/volunteer-submissions`
+* `POST /api/pawbuddy-chat` (Proxies to Gemini API)
+* *(And others as defined in `server.js`)*
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/3abb1098-bc2f-4ae5-8aa7-48fa46558e4e) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+*This project was inspired by the "Pet-Friendly City Campaign" and aims to provide a unique, hyper-local solution for the North Dumdum community. Content ideas from `collegetips.in/pfc/` were considered during initial ideation.*
