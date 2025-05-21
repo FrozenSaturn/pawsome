@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -54,9 +53,14 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				brand: {
-					orange: "#F97316",
-					teal: "#0EA5E9",
-					light: "#FEF7CD",
+					// Orange: A bit more vibrant
+					orange: "#FF6F00", // Was #F97316
+					// Teal: A slightly softer, more friendly teal
+					teal: "#14B8A6",   // Was #0EA5E9
+					// Light: A warm, very pale yellow or off-white
+					light: "#FFFBEB",   // Was #FEF7CD
+                    // Adding a new vibrant accent
+                    yellow: "#FACC15" // Sunny Yellow
 				}
 			},
 			borderRadius: {

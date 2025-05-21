@@ -1,69 +1,78 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 40 100% 99%;
-    --foreground: 222.2 84% 4.9%;
+    /* Background: A slightly warmer off-white for a friendlier feel */
+    --background: 0 0% 99%; /* Was 40 100% 99% - more neutral now for contrast */
+    --foreground: 224 71% 4%; /* Dark slate, good for readability */
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 224 71% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 224 71% 4%;
 
-    --primary: 24 99% 53%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary: Cheerful Orange (matches brand.orange #FF6F00) */
+    --primary: 28 100% 50%; /* HSL for #FF6F00 */
+    --primary-foreground: 0 0% 100%; /* White for good contrast on orange */
 
-    --secondary: 197 100% 45%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary: Friendly Teal (matches brand.teal #14B8A6) */
+    --secondary: 174 77% 40%; /* HSL for #14B8A6 */
+    --secondary-foreground: 0 0% 100%; /* White for good contrast on teal */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted: Softer, slightly warm gray */
+    --muted: 220 13% 91%; /* Was 210 40% 96.1% */
+    --muted-foreground: 220 9% 46%; /* Was 215.4 16.3% 46.9% */
 
-    --accent: 48 100% 90%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent: Sunny Yellow (matches brand.yellow #FACC15) */
+    --accent: 45 93% 53%; /* HSL for #FACC15 */
+    /* Accent Foreground: Darker for readability on yellow */
+    --accent-foreground: 30 90% 25%; /* A dark brown/orange */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%; /* Keeping destructive noticeable */
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 13% 86%; /* Slightly warmer border */
+    --input: 220 13% 86%;  /* Consistent with border */
+    --ring: 28 100% 50%; /* Primary color for rings for focus states */
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Theme Adjustments (can be made more vibrant too if desired, for now focusing on light) */
+    --background: 224 71% 4%;
+    --foreground: 0 0% 98%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary (dark theme): Lighter orange for visibility */
+    --primary: 28 100% 60%;
+    --primary-foreground: 28 100% 10%; /* Darker text on light orange */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary (dark theme): Lighter teal */
+    --secondary: 174 77% 50%;
+    --secondary-foreground: 174 100% 15%; /* Darker text on light teal */
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 220 9% 55%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent (dark theme): A less intense yellow or a different vibrant color */
+    --accent: 45 93% 63%;
+    --accent-foreground: 30 90% 25%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 63% 40%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 28 100% 60%; /* Lighter primary for rings */
   }
 }
 
@@ -73,6 +82,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif; /* Adding a nice sans-serif font */
   }
 }
 
