@@ -8,6 +8,11 @@ export default {
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
 	],
+	textShadow: { 
+		DEFAULT: '0 2px 4px rgba(0,0,0,0.20)',
+		sm: '0 1px 2px rgba(0,0,0,0.20)',
+		lg: '0 4px 8px rgba(0,0,0,0.20)',
+	},
 	prefix: "",
 	theme: {
 		container: {
@@ -69,6 +74,14 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
+				kenburns: { // For Hero background image
+          '0%': { transform: 'scale(1.05) translate(0,0)', filter: 'brightness(1)' },
+          '100%': { transform: 'scale(1.15) translate(-1%, 0.5%)', filter: 'brightness(1)' },
+        },
+        bounce: { // For PetPulseMap icon
+          '0%, 100%': { transform: 'translateY(-10%)', animationTimingFunction: 'cubic-bezier(0.8,0,1,1)' },
+          '50%': { transform: 'none', animationTimingFunction: 'cubic-bezier(0,0,0.2,1)' },
+        },
 				"accordion-down": {
 					from: { height: "0", opacity: "0" },
 					to: { height: "var(--radix-accordion-content-height)", opacity: "1" }
@@ -96,7 +109,9 @@ export default {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 				"fade-in": "fade-in 0.5s ease-out",
-				"slide-in-right": "slide-in-right 0.3s ease-out"
+				"slide-in-right": "slide-in-right 0.3s ease-out",
+				kenburns: 'kenburns 40s ease-out infinite alternate',
+        bounce: 'bounce 1.5s infinite',
 			},
 		}
 	},

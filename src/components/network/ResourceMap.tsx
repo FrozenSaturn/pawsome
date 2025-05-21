@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Ensure Leaflet's CSS is imported if not globally available via index.html
 import L from 'leaflet'; // Import L for custom icons if needed, or for LatLng type
+import { ZAxis } from 'recharts';
 
 // Fix for default Leaflet icon issue with Webpack/Vite
 // You might need to copy these icon images to your public folder
@@ -230,7 +231,7 @@ const ResourceMap = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Map Container (Left Column on Desktop) */}
         <div className="lg:col-span-2 bg-muted rounded-xl border relative h-[400px] lg:h-[500px] overflow-hidden">
-          <MapContainer center={northDumdumCenter} zoom={14} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+          <MapContainer center={northDumdumCenter} zoom={14} scrollWheelZoom={true} style={{ height: '100%', width: '100%', zIndex:0 }}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

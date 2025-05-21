@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, PawPrint, Mail, Phone as PhoneIcon, Info, Filter, Search, Users, Plus, Link, MapPin } from 'lucide-react';
+import { Heart, PawPrint, Mail, Phone as PhoneIcon, Info, Filter, Search, Users, Plus, MapPin, Link } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,12 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-// import { useToast } from "@/components/ui/use-toast"; // Uncomment if you set up toast notifications
+import { useToast } from "@/components/ui/use-toast";
 
 interface AdoptablePet {
   id: number;
   name: string;
-  type: 'Dog' | 'Cat' | string; // Allow other types
+  type: 'Dog' | 'Cat' | string;
   breed: string;
   age: string;
   gender: 'Male' | 'Female' | string;
@@ -31,27 +31,29 @@ const AdoptPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterGender, setFilterGender] = useState('all');
+  const [isListPetDialogOpen, setIsListPetDialogOpen] = useState(false); // Control dialog state
 
-  // const { toast } = useToast(); // Uncomment if you set up toast notifications
+  const { toast } = useToast();
+
+  const fetchPets = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('http://localhost:3000/api/adoptable-pets');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch pets. Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setPets(data);
+    } catch (err: any) {
+      setError(err.message || 'Could not load pets for adoption.');
+      console.error("Error fetching adoptable pets:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPets = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch('http://localhost:3000/api/adoptable-pets');
-        if (!response.ok) {
-          throw new Error(`Failed to fetch pets. Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setPets(data);
-      } catch (err: any) {
-        setError(err.message || 'Could not load pets for adoption.');
-        console.error("Error fetching adoptable pets:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchPets();
   }, []);
 
@@ -63,26 +65,47 @@ const AdoptPage = () => {
   const handleListPetSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const newPetData = Object.fromEntries(formData.entries());
+    const newPetData = {
+        name: formData.get('name') as string,
+        type: formData.get('type') as string,
+        breed: formData.get('breed') as string,
+        age: formData.get('age') as string,
+        gender: formData.get('gender') as string,
+        description: formData.get('description') as string,
+        image: formData.get('image') as string,
+        contact: formData.get('contact') as string,
+        location: formData.get('location') as string,
+    };
 
-    // Basic validation
-    if (!newPetData.name || !newPetData.type || !newPetData.breed || !newPetData.age || !newPetData.gender || !newPetData.description || !newPetData.contact || !newPetData.location || !newPetData.image) {
-        // toast({ variant: "destructive", title: "Missing Fields", description: "Please fill out all required fields." });
-        alert("Please fill out all required fields to list a pet.");
+    if (!newPetData.name || !newPetData.type || !newPetData.breed || !newPetData.age || !newPetData.gender || !newPetData.description || !newPetData.contact || !newPetData.location ) {
+        toast({ variant: "destructive", title: "Missing Fields", description: "Please fill out all required fields." });
         return;
     }
     
-    console.log("New pet to list (frontend):", newPetData);
-    // TODO: Implement backend POST request to '/api/adoptable-pets'
-    // For now, we'll just log it and show a success message.
-    // In a real app, you'd want to update the pets list or re-fetch.
+    try {
+        const response = await fetch('http://localhost:3000/api/adoptable-pets', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newPetData),
+        });
 
-    // Example of adding to local state (for demo purposes, will be overwritten on next fetch)
-    // setPets(prevPets => [...prevPets, { ...newPetData, id: Date.now() } as AdoptablePet]);
+        const result = await response.json();
 
-    // toast({ title: "Pet Listed!", description: `${newPetData.name} has been submitted for listing.` });
-    alert(`${newPetData.name} has been submitted for listing (locally). Backend integration needed.`);
-    // Potentially close the dialog here if you control its open state
+        if (!response.ok) {
+            throw new Error(result.error || `Failed to list pet. Status: ${response.status}`);
+        }
+
+        toast({ title: "Pet Listed!", description: `${result.pet.name} has been successfully listed for adoption.` });
+        fetchPets(); // Re-fetch pets to include the new one
+        setIsListPetDialogOpen(false); // Close the dialog
+        event.currentTarget.reset(); // Reset form fields
+
+    } catch (err: any) {
+        console.error("Error listing pet:", err);
+        toast({ variant: "destructive", title: "Listing Failed", description: err.message || "Could not list the pet. Please try again." });
+    }
   };
 
 
@@ -125,8 +148,8 @@ const AdoptPage = () => {
     </Card>
   );
 
-  const renderSkeletonCard = () => (
-    <Card className="flex flex-col overflow-hidden">
+  const renderSkeletonCard = (index: number) => ( // Added index key
+    <Card key={index} className="flex flex-col overflow-hidden">
       <Skeleton className="aspect-[4/3] w-full" />
       <CardContent className="p-4">
         <Skeleton className="h-6 w-3/4 mb-2" />
@@ -176,7 +199,6 @@ const AdoptPage = () => {
                     <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="Dog">Dogs</SelectItem>
                     <SelectItem value="Cat">Cats</SelectItem>
-                    {/* Add other types if necessary */}
                 </SelectContent>
             </Select>
             <Select value={filterGender} onValueChange={setFilterGender}>
@@ -192,7 +214,7 @@ const AdoptPage = () => {
                 </SelectContent>
             </Select>
         </div>
-         <Dialog>
+         <Dialog open={isListPetDialogOpen} onOpenChange={setIsListPetDialogOpen}> {/* Control dialog state */}
             <DialogTrigger asChild>
                 <Button variant="outline" className="w-full md:w-auto">
                     <Plus size={16} className="mr-2"/> List a Pet for Adoption
@@ -207,30 +229,31 @@ const AdoptPage = () => {
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleListPetSubmit} className="grid gap-4 py-4">
+                    {/* Form fields remain the same as previous version */}
                     <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-1.5">
-                            <Label htmlFor="pet-name">Pet's Name</Label>
-                            <Input name="name" id="pet-name" placeholder="e.g., Buddy" required />
+                            <Label htmlFor="pet-name-dialog">Pet's Name</Label> {/* Changed ID to be unique */}
+                            <Input name="name" id="pet-name-dialog" placeholder="e.g., Buddy" required />
                         </div>
                         <div className="grid gap-1.5">
-                            <Label htmlFor="pet-type">Type (Dog, Cat, etc.)</Label>
-                            <Input name="type" id="pet-type" placeholder="e.g., Dog" required />
+                            <Label htmlFor="pet-type-dialog">Type (Dog, Cat, etc.)</Label> {/* Changed ID */}
+                            <Input name="type" id="pet-type-dialog" placeholder="e.g., Dog" required />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-1.5">
-                            <Label htmlFor="pet-breed">Breed</Label>
-                            <Input name="breed" id="pet-breed" placeholder="e.g., Labrador Mix" required />
+                            <Label htmlFor="pet-breed-dialog">Breed</Label> {/* Changed ID */}
+                            <Input name="breed" id="pet-breed-dialog" placeholder="e.g., Labrador Mix" required />
                         </div>
                         <div className="grid gap-1.5">
-                            <Label htmlFor="pet-age">Age</Label>
-                            <Input name="age" id="pet-age" placeholder="e.g., 2 years" required />
+                            <Label htmlFor="pet-age-dialog">Age</Label> {/* Changed ID */}
+                            <Input name="age" id="pet-age-dialog" placeholder="e.g., 2 years" required />
                         </div>
                     </div>
                      <div className="grid gap-1.5">
-                        <Label htmlFor="pet-gender">Gender</Label>
+                        <Label htmlFor="pet-gender-dialog">Gender</Label> {/* Changed ID */}
                         <Select name="gender" required>
-                            <SelectTrigger id="pet-gender">
+                            <SelectTrigger id="pet-gender-dialog">
                                 <SelectValue placeholder="Select gender" />
                             </SelectTrigger>
                             <SelectContent>
@@ -241,21 +264,22 @@ const AdoptPage = () => {
                         </Select>
                     </div>
                     <div className="grid gap-1.5">
-                        <Label htmlFor="pet-image">Image URL</Label>
-                        <Input name="image" id="pet-image" type="url" placeholder="https://example.com/image.jpg" required />
+                        <Label htmlFor="pet-image-dialog">Image URL</Label> {/* Changed ID */}
+                        <Input name="image" id="pet-image-dialog" type="url" placeholder="https://example.com/image.jpg" />
+                         <small className="text-xs text-muted-foreground">Optional. If blank, a placeholder will be used.</small>
                     </div>
                     <div className="grid gap-1.5">
-                        <Label htmlFor="pet-description">Description</Label>
-                        <Textarea name="description" id="pet-description" placeholder="Tell us about the pet's personality, needs, etc." required />
+                        <Label htmlFor="pet-description-dialog">Description</Label> {/* Changed ID */}
+                        <Textarea name="description" id="pet-description-dialog" placeholder="Tell us about the pet's personality, needs, etc." required />
                     </div>
                      <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-1.5">
-                            <Label htmlFor="pet-contact">Your Contact Info</Label>
-                            <Input name="contact" id="pet-contact" placeholder="Phone or Email" required />
+                            <Label htmlFor="pet-contact-dialog">Your Contact Info</Label> {/* Changed ID */}
+                            <Input name="contact" id="pet-contact-dialog" placeholder="Phone or Email" required />
                         </div>
                         <div className="grid gap-1.5">
-                            <Label htmlFor="pet-location">Pet's Current Location (North Dumdum)</Label>
-                            <Input name="location" id="pet-location" placeholder="e.g., Birati, Dum Dum Park area" required />
+                            <Label htmlFor="pet-location-dialog">Pet's Current Location (North Dumdum)</Label> {/* Changed ID */}
+                            <Input name="location" id="pet-location-dialog" placeholder="e.g., Birati, Dum Dum Park area" required />
                         </div>
                     </div>
                     <Button type="submit" className="w-full mt-2">Submit for Listing</Button>
@@ -264,10 +288,9 @@ const AdoptPage = () => {
         </Dialog>
       </div>
 
-
       {isLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 3 }).map((_, index) => renderSkeletonCard())}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, index) => renderSkeletonCard(index))}
         </div>
       )}
 
